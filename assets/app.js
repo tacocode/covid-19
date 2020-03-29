@@ -5,15 +5,18 @@ google.charts.load('current', {
     ]
 });
 
+const dataUrl = 'https://coviddata.github.io/coviddata/v1/countries/stats.json';
+const tableDiv = document.getElementById('table_div');
 let jsonData = null;
 
-fetch('https://coviddata.github.io/covid-api/v1/countries/stats.json?v=' + Date.now())
+fetch(`${dataUrl}?v=${Date.now()}`)
     .then(res => res.json())
     .then((out) => {
         jsonData = out;
         google.charts.setOnLoadCallback(drawTable);
     })
     .catch(err => {
+        tableDiv.innerHTML = `<span class="error">Could no load data (${err.message})</span>`;
         throw err
     });
 
@@ -39,7 +42,7 @@ function drawTable() {
     });
 
     data.addRows(countryData);
-    const table = new google.visualization.Table(document.getElementById('table_div'));
+    const table = new google.visualization.Table(tableDiv);
     table.draw(data, {
         showRowNumber: true,
         width: '100%',

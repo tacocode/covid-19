@@ -38,3 +38,7 @@ footer a {
     color: #636b6f;
     text-decoration: none;
 }
+.error {
+    padding: 2rem;
+    color: #ff0000;
+}
