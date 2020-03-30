@@ -21,29 +21,58 @@ fetch(`${dataUrl}?v=${Date.now()}`)
     });
 
 function drawTable() {
-    let data = new google.visualization.DataTable();
-    data.addColumn('string', 'Country');
-    data.addColumn('number', 'Active');
-    data.addColumn('number', 'Confirmed');
-    data.addColumn('number', 'Recovered');
-    data.addColumn('number', 'Deceased');
+    let dataTable = new google.visualization.DataTable();
+    dataTable.addColumn('string', 'Country');
+    dataTable.addColumn('number', 'Active');
+    dataTable.addColumn('number', 'Confirmed');
+    dataTable.addColumn('number', 'Recovered');
+    dataTable.addColumn('number', 'Deceased');
+    dataTable.addColumn('string', 'Recovery %');
+    dataTable.addColumn('string', 'Fatality %');
 
     let countryData = [];
+    let totals = {
+        cases: 0,
+        recoveries: 0,
+        deaths: 0,
+    };
 
     jsonData.forEach((country, idx) => {
         let lastDate = country.dates[Object.keys(country.dates)[Object.keys(country.dates).length - 1]];
+        let recoveryRate = lastDate.cumulative.recoveries / lastDate.cumulative.cases * 100;
+        let fatalityRate = lastDate.cumulative.deaths / lastDate.cumulative.cases * 100;
+        totals.cases += lastDate.cumulative.cases;
+        totals.recoveries += lastDate.cumulative.recoveries;
+        totals.deaths += lastDate.cumulative.deaths;
         countryData.push([
             country.country.name,
             lastDate.cumulative.cases - (lastDate.cumulative.recoveries + lastDate.cumulative.deaths),
             lastDate.cumulative.cases,
             lastDate.cumulative.recoveries,
-            lastDate.cumulative.deaths
-        ])
+            lastDate.cumulative.deaths,
+            recoveryRate > 0 ? recoveryRate.toFixed(2) : '0.00',
+            fatalityRate > 0 ? fatalityRate.toFixed(2) : '0.00',
+        ]);
     });
 
-    data.addRows(countryData);
+    let recoveryRateTotal = totals.recoveries / totals.cases * 100;
+    let fatalityRateTotal = totals.deaths / totals.cases * 100;
+
+    countryData.push([
+        'TOTALS',
+        totals.cases - (totals.recoveries + totals.deaths),
+        totals.cases,
+        totals.recoveries,
+        totals.deaths,
+        recoveryRateTotal > 0 ? recoveryRateTotal.toFixed(2) : '0.00',
+        fatalityRateTotal > 0 ? fatalityRateTotal.toFixed(2) : '0.00',
+    ]);
+
+    dataTable.addRows(countryData);
+
     const table = new google.visualization.Table(tableDiv);
-    table.draw(data, {
+    table.draw(dataTable, {
+        allowHTML: true,
         showRowNumber: true,
         width: '100%',
         height: '100%',
