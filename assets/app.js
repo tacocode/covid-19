@@ -27,8 +27,8 @@ function drawTable() {
     dataTable.addColumn('number', 'Confirmed');
     dataTable.addColumn('number', 'Recovered');
     dataTable.addColumn('number', 'Deceased');
-    dataTable.addColumn('string', 'Recovery %');
-    dataTable.addColumn('string', 'Fatality %');
+    dataTable.addColumn('number', 'Recovery %');
+    dataTable.addColumn('number', 'Fatality %');
 
     let countryData = [];
     let totals = {
@@ -50,8 +50,8 @@ function drawTable() {
             lastDate.cumulative.cases,
             lastDate.cumulative.recoveries,
             lastDate.cumulative.deaths,
-            recoveryRate > 0 ? recoveryRate.toFixed(2) : '0.00',
-            fatalityRate > 0 ? fatalityRate.toFixed(2) : '0.00',
+            recoveryRate > 0 ? parseFloat(recoveryRate.toFixed(2)) : 0.00,
+            fatalityRate > 0 ? parseFloat(fatalityRate.toFixed(2)) : 0.00,
         ]);
     });
 
@@ -64,8 +64,8 @@ function drawTable() {
         totals.cases,
         totals.recoveries,
         totals.deaths,
-        recoveryRateTotal > 0 ? recoveryRateTotal.toFixed(2) : '0.00',
-        fatalityRateTotal > 0 ? fatalityRateTotal.toFixed(2) : '0.00',
+        recoveryRateTotal > 0 ? parseFloat(recoveryRateTotal.toFixed(2)) : 0.00,
+        fatalityRateTotal > 0 ? parseFloat(fatalityRateTotal.toFixed(2)) : 0.00,
     ]);
 
     dataTable.addRows(countryData);
