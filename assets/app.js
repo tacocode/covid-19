@@ -18,6 +18,9 @@ fetch(`${dataUrl}?v=${Date.now()}`)
     .catch(err => {
         tableDiv.innerHTML = `<span class="error">Could no load data (${err.message})</span>`;
         throw err
+    })
+    .then(() => {
+        document.getElementById('loader').classList.add('d-none')
     });
 
 function drawTable() {
