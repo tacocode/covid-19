@@ -62,7 +62,7 @@ function drawTable() {
     let fatalityRateTotal = totals.deaths / totals.cases * 100;
 
     countryData.push([
-        'TOTALS',
+        'WORLD',
         totals.cases - (totals.recoveries + totals.deaths),
         totals.cases,
         totals.recoveries,
